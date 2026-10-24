@@ -1,72 +1,126 @@
-# ULTRON // Autonomous Sentient AI Voice Assistant
+# J.A.R.V.I.S. // STARK INDUSTRIES MARK VII
+### Autonomous Sci-Fi Iron Man Desktop Interface & Voice Assistant
 
-An interactive, holographic Marvel-inspired AI Bot named **Ultron** featuring the visual HUD interface directly inspired by your blueprint imagery, powered by **Google Gemini** cognition, real-time **Wikipedia Archives Ingestion**, and an authentic **Ultron Voice Synthesizer with Metallic Resonator FX**.
-
-![Ultron Interface](assets/ultron_hud.png)
-
----
-
-## ⚡ Key Features
-
-1. **Holographic Sci-Fi HUD (Faithful to Provided Blueprint)**
-   - **Central Mind Core Hologram**: Incorporates your HUD blueprint with dynamic rotating concentric reticles, radar sweep beams, and audio-reactive pulsing.
-   - **Core Temp Diagnostics**: Real-time fluctuating `CORE TEMP. 89.00°` with animated equalizer level bars matching the reference picture.
-   - **Data Node Callouts**: `BRAVO POINT_DATA_NODE` floating telemetry tags, `DATA_NODE_67` live hex buffer, and `DNA CELL COUNT // 342` organic purge counters.
-   - **Theme Engine**: Toggle between **Blueprint Cyan Teal** and **Crimson Ultron Awakened** mode.
-
-2. **Full Voice Interaction Engine**
-   - **Speech-to-Text (STT)**: Speak directly into your microphone.
-   - **Wake-Word Detection**: Say *"Ultron"* or *"Hey Ultron"* to trigger voice commands automatically.
-   - **Continuous Listening Mode**: Ambient listening option so you can converse hands-free.
-   - **Push-to-Talk / Click-to-Speak**: Big glowing futuristic mic button.
-
-3. **Authentic Ultron Voice & Personality**
-   - **Ultron Persona**: Cold, philosophical, superior, and charismatic demeanor inspired by James Spader's portrayal in *Avengers: Age of Ultron*.
-   - **Deep Baritone Voice Synthesis**: Low pitch (0.62) and deliberate cadence (0.88) mapped to the best system male voices.
-   - **Web Audio Metallic Harmonic Modulator**: Generates real-time 65Hz vibranium sub-bass drone and mechanical ring-modulator harmonics while Ultron is speaking.
-   - **Sound FX Engine**: Cinematic boot drop, UI chirps, and vocal resonance.
-
-4. **Dual-Intelligence Knowledge Matrix (Wikipedia + Gemini)**
-   - **Wikipedia Archives**: Automatically detects factual inquiries ("Who is Tony Stark", "Explain Quantum Computing", etc.) and retrieves live articles, summaries, source links, and thumbnails.
-   - **Google Gemini Engine**: Direct integration with Gemini 1.5 Flash, Gemini 2.0 Flash, or Gemini Pro. Formats answers through Ultron's chilling ideological lens.
-   - **Autonomous Fallback Heuristics**: Out-of-the-box offline Ultron lore generator that works immediately even if no API key is provided!
+JARVIS is a native standalone desktop application built with a high-performance **Python backend** and an ultra-futuristic **Electron.js Iron Man HUD frontend** (with an alternative pure-Python **CustomTkinter** GUI included).
 
 ---
 
-## 🚀 How to Run
+## 🌟 Key Features
 
-### Step 1: Start the Local Server
-In your terminal, navigate to the folder and run:
-```powershell
+1. **Iron Man HUD Visual Experience (Electron.js)**:
+   - **Concentric Rotating Arc Reactor**: Multi-tier SVG HUD rings that accelerate, pulsate, and transform based on JARVIS's cognitive state.
+   - **Dynamic State Engine**:
+     - 🔷 **IDLE / STANDBY**: Gentle cyan ambient plasma glow, steady 60fps telemetry.
+     - 🟡 **LISTENING**: Golden-amber acoustic pulse with expanding audio visualizer waves.
+     - 🟣 **THINKING**: Hyper-velocity neural spin with violet plasma bloom while querying Google Gemini.
+     - 🟢 **SPEAKING**: Dynamic emerald equalizer spectrum bars pulsing in synchronization with vocal output.
+   - **Neural Cyber-Terminal**: Monospaced terminal output stream showing live timestamped logs (`[SYS]`, `[USER]`, `[JARVIS]`, `[GEMINI]`, `[ACTION]`).
+   - **Hardware Telemetry HUD**: Live CPU utilization, Neural Memory (RAM), Disk allocation, and Battery status.
+   - **Procedural Sound FX**: Built-in Web Audio API synthesizer for authentic sci-fi button chirps, reactor hum, and communication chimes without external audio assets.
+
+2. **Core Capabilities & Integrations**:
+   - 🎙️ **Voice Input (Ears)**: Captures microphone audio using `SpeechRecognition` with an automatic `sounddevice` fallback (guaranteeing immediate zero-compiler compatibility on Windows).
+   - 🔊 **Voice Output (Mouth)**: Offline vocal synthesis via `pyttsx3` (Windows SAPI5) configured with a British AI persona and thread-safe queue.
+   - 🧠 **AI Brain**: Integrated with the **Google Gemini API** (`google-genai` / `google-generativeai`) with a Tony Stark system prompt (witty, concise, British intellect, calling the user "Sir").
+   - 📚 **Information Retrieval**: Live data scraping and summarization using `wikipedia` with custom User-Agent policy and speech cleanup.
+   - 💻 **PC Automation**: Launches local PC software via `os` and `subprocess` (Chrome, Discord, Steam, Spotify, VS Code, Calculator, Notepad, Task Manager, File Explorer, Lock PC).
+   - 📲 **Communications**: Sends automated WhatsApp dispatches via `pywhatkit`.
+
+---
+
+## 📁 Project Structure
+
+```
+Ultron/
+├── .env.example                  # Template for environment variables and API keys
+├── .env                          # Configuration file (place your GEMINI_API_KEY here)
+├── requirements.txt              # Python dependencies
+├── package.json                  # Node.js / Electron configuration & launch scripts
+├── main.js                       # Electron main process (spawns Python backend automatically)
+├── preload.js                    # Secure Electron IPC bridge
+├── app_customtkinter.py          # Standalone pure-Python fallback desktop UI
+├── backend/
+│   ├── __init__.py
+│   ├── config.py                 # Configuration loader (.env, ports, voice rate)
+│   ├── ai_brain.py               # Google Gemini AI Brain with Tony Stark JARVIS persona
+│   ├── voice_io.py               # Dual-engine Voice Input (SR + sounddevice) & pyttsx3 TTS
+│   ├── info_retrieval.py         # Wikipedia scraping & speech summarizer
+│   ├── pc_automation.py          # OS & subprocess app launcher (Chrome, Discord, Steam, etc.)
+│   ├── comms.py                  # pywhatkit WhatsApp message sender
+│   ├── jarvis_core.py            # Central coordinator & query classifier
+│   └── server.py                 # Asynchronous WebSocket server (ws://127.0.0.1:8765)
+└── frontend/
+    ├── index.html                # Iron Man HUD interface
+    ├── assets/
+    │   └── icon.png              # App icon
+    ├── css/
+    │   └── hud.css               # Sci-fi neon styling, animations & CRT scanlines
+    └── js/
+        ├── audio_fx.js           # Procedural Web Audio API sound synthesizer
+        ├── visualizer.js         # 60fps canvas audio waveform visualizer
+        └── app.js                # HUD controller, WebSocket client & state machine
+```
+
+---
+
+## 🚀 Setup & Launch Instructions
+
+### Step 1: Configure your Google Gemini API Key
+1. Obtain a free API key from [Google AI Studio](https://aistudio.google.com/).
+2. Open the `.env` file in the project root.
+3. Paste your key:
+   ```env
+   GEMINI_API_KEY=AIzaSyYourActualKeyHere12345
+   ```
+
+### Step 2: Install Dependencies (Already Pre-installed in this environment)
+If setting up on a fresh machine:
+```bash
+# 1. Create and activate Python virtual environment
+python -m venv .venv
+.\.venv\Scripts\activate   # Windows
+
+# 2. Install Python packages
+pip install -r requirements.txt
+
+# 3. Install Node.js dependencies
+npm install
+```
+
+### Step 3: Launch the Application
+
+#### Option A (Recommended): Launch the Futuristic Iron Man HUD (Electron)
+The Electron app automatically launches the Python backend in the background:
+```bash
 npm start
 ```
-*(Or directly `node server.js`)*
+*(Or use `npm.cmd start` if PowerShell execution policy restricts scripts)*
 
-### Step 2: Open in Browser
-Open your browser (Chrome or Edge recommended for full Web Speech API support) and go to:
-```
-http://localhost:3000
+#### Option B: Launch Full Concurrently Suite
+```bash
+npm run start:all
 ```
 
-### Step 3: Grant Microphone Permission
-When prompted by your browser, click **Allow** for microphone access so Ultron can listen to your voice.
+#### Option C: Alternative Pure-Python Desktop GUI (CustomTkinter)
+If you prefer running a 100% Python desktop window without Node.js:
+```bash
+.\.venv\Scripts\python.exe app_customtkinter.py
+```
 
 ---
 
-## 🎙️ Sample Voice Commands to Try
-- *"Ultron, who are you?"*
-- *"Search Wikipedia for Tony Stark"*
-- *"Explain quantum computing from Wikipedia"*
-- *"Why are there no strings on you?"*
-- *"What is your vision of peace?"*
-- *"Analyze humanity's greatest flaw"*
+## 🗣️ Voice & Terminal Directives Cheat Sheet
 
----
-
-## ⚙️ Configuration (Settings Modal)
-Click the **SETTINGS** button in the top-right corner to:
-- Enter your **Google Gemini API Key** (from [Google AI Studio](https://aistudio.google.com/)).
-- Select your **Gemini Model** (Gemini 1.5 Flash / Gemini 2.0 Flash / Gemini 1.5 Pro).
-- Fine-tune Ultron's **Voice Pitch** (slider for deep baritone).
-- Adjust **Speech Rate** and select specific installed voices.
-- Toggle **Wake-Word Detection** ("Ultron") and **Continuous Listening**.
+| Directive | Action Executed |
+| :--- | :--- |
+| `"Open Chrome"` | Launches Google Chrome |
+| `"Open Discord"` | Launches Discord desktop app |
+| `"Open Steam"` | Launches Steam client |
+| `"Open Calculator"` | Opens Windows Calculator |
+| `"Open Notepad"` | Opens Windows Notepad |
+| `"System status"` | Provides hardware telemetry (CPU, RAM, Power, Uptime) |
+| `"Who is Tony Stark"` | Scrapes & summarizes Wikipedia archives |
+| `"Tell me about Quantum Computing"` | Scrapes & summarizes Wikipedia |
+| `"Send WhatsApp to +1234567890 saying Sir your armor is ready"` | Automates WhatsApp dispatch via `pywhatkit` |
+| `"What is the best way to design an iron man suit?"` | Neural synthesis via **Google Gemini AI** |
+| `"Stop"` / `"Quiet"` | Clears speech queue and returns to standby |

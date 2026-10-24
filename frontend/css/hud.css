@@ -1,0 +1,923 @@
+/* ==============================================================================
+   JARVIS IRON MAN HUD STYLESHEET
+   Stark Industries Mark VII Interface
+   ============================================================================== */
+
+:root {
+  --bg-deep: #030712;
+  --bg-surface: rgba(6, 15, 30, 0.75);
+  --bg-card: rgba(10, 25, 48, 0.65);
+  --border-cyan: rgba(0, 240, 255, 0.35);
+  --border-blue: rgba(0, 128, 255, 0.3);
+
+  --color-cyan: #00f0ff;
+  --color-cyan-glow: rgba(0, 240, 255, 0.65);
+  --color-blue: #0080ff;
+  --color-blue-glow: rgba(0, 128, 255, 0.5);
+  --color-white: #f8fafc;
+  --color-amber: #ffb703;
+  --color-green: #00f59b;
+  --color-purple: #bd00ff;
+  --color-red: #ff0055;
+
+  --font-mono: 'Consolas', 'Fira Code', 'Courier New', monospace;
+  --font-hud: 'Segoe UI', -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  background-color: var(--bg-deep);
+  color: var(--color-white);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* Hologram CRT Scanline Effect */
+.hud-scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ),
+  linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.8;
+}
+
+/* Sci-Fi Grid Overlay */
+.hud-grid-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(0, 128, 255, 0.1) 0%, transparent 70%),
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* HUD Layout Container */
+.hud-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+}
+
+/* -----------------------------------------------------------------------------
+   Top HUD Header & Titlebar
+   ----------------------------------------------------------------------------- */
+.hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(180deg, rgba(6, 18, 38, 0.9) 0%, rgba(3, 8, 18, 0.6) 100%);
+  border-bottom: 1px solid var(--border-cyan);
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.08);
+  -webkit-app-region: drag; /* Window draggable */
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.stark-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stark-icon {
+  color: var(--color-cyan);
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px var(--color-cyan);
+}
+
+.stark-brand {
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  color: var(--color-white);
+}
+
+.hud-badge {
+  font-size: 0.65rem;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid var(--color-cyan);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--color-cyan);
+  letter-spacing: 1px;
+}
+
+.sys-clock {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  border-left: 1px solid #334155;
+  padding-left: 15px;
+}
+
+.header-center {
+  text-align: center;
+}
+
+.system-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--color-cyan);
+  text-shadow: 0 0 12px var(--color-cyan-glow);
+}
+
+.system-subtitle {
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  color: #64748b;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  background: rgba(15, 23, 42, 0.8);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-amber);
+  box-shadow: 0 0 8px var(--color-amber);
+  transition: all 0.3s;
+}
+
+.connection-status.online .status-dot {
+  background-color: var(--color-cyan);
+  box-shadow: 0 0 8px var(--color-cyan);
+}
+
+.connection-status.online .status-text {
+  color: var(--color-cyan);
+}
+
+.window-controls {
+  display: flex;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.win-btn {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+
+.win-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+}
+
+.win-btn.win-close:hover {
+  background: var(--color-red);
+  color: white;
+  border-color: var(--color-red);
+}
+
+/* -----------------------------------------------------------------------------
+   Main Workspace Layout
+   ----------------------------------------------------------------------------- */
+.hud-main {
+  display: grid;
+  grid-template-columns: 310px 1fr 390px;
+  gap: 15px;
+  padding: 15px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sci-Fi Glass Panels */
+.hud-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-cyan);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.05);
+}
+
+/* HUD Corner Brackets Accent */
+.hud-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid var(--color-cyan);
+  border-left: 2px solid var(--color-cyan);
+  pointer-events: none;
+}
+
+.hud-panel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid var(--color-cyan);
+  border-right: 2px solid var(--color-cyan);
+  pointer-events: none;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(3, 10, 24, 0.8);
+  border-bottom: 1px solid var(--border-blue);
+}
+
+.panel-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--color-cyan);
+}
+
+.panel-code {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+/* -----------------------------------------------------------------------------
+   Left Panel: Telemetry & Radar
+   ----------------------------------------------------------------------------- */
+.telemetry-block {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.telemetry-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  letter-spacing: 1px;
+}
+
+.gauge-track {
+  height: 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gauge-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.gauge-bar.cyan {
+  background: linear-gradient(90deg, #0080ff, #00f0ff);
+  box-shadow: 0 0 8px var(--color-cyan);
+}
+
+.gauge-bar.blue {
+  background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+  box-shadow: 0 0 8px #3b82f6;
+}
+
+.gauge-bar.purple {
+  background: linear-gradient(90deg, #7c3aed, #bd00ff);
+  box-shadow: 0 0 8px #bd00ff;
+}
+
+/* Radar Reticle Widget */
+.radar-box {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 10px auto;
+  border-radius: 50%;
+  border: 1px solid var(--border-cyan);
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 240, 255, 0.3);
+}
+
+.radar-ring.r1 { width: 90px; height: 90px; }
+.radar-ring.r2 { width: 45px; height: 45px; }
+
+.radar-crosshair-h {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 240, 255, 0.2);
+}
+
+.radar-crosshair-v {
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background: rgba(0, 240, 255, 0.2);
+}
+
+.radar-sweep {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 0;
+  right: 0;
+  transform-origin: 0% 100%;
+  background: linear-gradient(45deg, rgba(0, 240, 255, 0.4) 0%, transparent 70%);
+  border-radius: 0 100% 0 0;
+  animation: radar-spin 3s linear infinite;
+}
+
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-label {
+  position: absolute;
+  bottom: -20px;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: #64748b;
+  text-align: center;
+  width: 200px;
+}
+
+/* Quick Protocols Launcher */
+.quick-protocols {
+  padding: 15px;
+  margin-top: auto;
+  border-top: 1px solid var(--border-blue);
+  background: rgba(2, 6, 16, 0.5);
+}
+
+.protocol-title {
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.protocol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.proto-btn {
+  background: rgba(10, 25, 48, 0.6);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: var(--color-white);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.proto-btn:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  transform: translateY(-1px);
+}
+
+/* -----------------------------------------------------------------------------
+   Center Stage: The Arc Reactor & State Indicators
+   ----------------------------------------------------------------------------- */
+.hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  position: relative;
+}
+
+/* Dynamic State Indicator Pill */
+.state-indicator-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 22px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+}
+
+/* State Classes */
+.state-idle {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--color-cyan);
+  color: var(--color-cyan);
+}
+
+.state-listening {
+  background: rgba(255, 183, 3, 0.15);
+  border: 1px solid var(--color-amber);
+  color: var(--color-amber);
+  box-shadow: 0 0 30px rgba(255, 183, 3, 0.4);
+  animation: pulse-amber 1.2s infinite alternate;
+}
+
+.state-thinking {
+  background: rgba(189, 0, 255, 0.15);
+  border: 1px solid var(--color-purple);
+  color: var(--color-purple);
+  box-shadow: 0 0 30px rgba(189, 0, 255, 0.4);
+  animation: pulse-purple 0.8s infinite alternate;
+}
+
+.state-speaking {
+  background: rgba(0, 245, 155, 0.15);
+  border: 1px solid var(--color-green);
+  color: var(--color-green);
+  box-shadow: 0 0 30px rgba(0, 245, 155, 0.4);
+  animation: pulse-green 1s infinite alternate;
+}
+
+@keyframes pulse-amber {
+  from { box-shadow: 0 0 15px rgba(255, 183, 3, 0.3); }
+  to { box-shadow: 0 0 35px rgba(255, 183, 3, 0.8); }
+}
+
+@keyframes pulse-purple {
+  from { box-shadow: 0 0 15px rgba(189, 0, 255, 0.3); }
+  to { box-shadow: 0 0 35px rgba(189, 0, 255, 0.8); }
+}
+
+@keyframes pulse-green {
+  from { box-shadow: 0 0 15px rgba(0, 245, 155, 0.3); }
+  to { box-shadow: 0 0 35px rgba(0, 245, 155, 0.8); }
+}
+
+/* Arc Reactor Stage */
+.arc-reactor-stage {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.reactor-glow-ambient {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, rgba(0, 128, 255, 0.05) 50%, transparent 75%);
+  filter: blur(25px);
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+
+.arc-reactor-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Rotating SVG Rings */
+.ring-outer-rotating {
+  transform-origin: 200px 200px;
+  animation: rotate-counter 28s linear infinite;
+}
+
+.ring-middle-rotating {
+  transform-origin: 200px 200px;
+  animation: rotate-clock 20s linear infinite;
+}
+
+.capacitors-group {
+  transform-origin: 200px 200px;
+  animation: rotate-counter 45s linear infinite;
+}
+
+.arc-core {
+  transform-origin: 200px 200px;
+  animation: core-pulse 3s ease-in-out infinite;
+}
+
+.arc-nucleus {
+  transform-origin: 200px 200px;
+  animation: nucleus-flicker 2s infinite alternate;
+}
+
+/* Speed-up rotations during THINKING state */
+.state-thinking ~ .arc-reactor-stage .ring-middle-rotating {
+  animation: rotate-clock 4s linear infinite;
+}
+
+.state-thinking ~ .arc-reactor-stage .ring-outer-rotating {
+  animation: rotate-counter 5s linear infinite;
+}
+
+@keyframes rotate-clock {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes core-pulse {
+  0% { transform: scale(0.96); opacity: 0.85; }
+  50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 25px var(--color-cyan)); }
+  100% { transform: scale(0.96); opacity: 0.85; }
+}
+
+@keyframes nucleus-flicker {
+  0% { opacity: 0.9; }
+  100% { opacity: 1; filter: drop-shadow(0 0 15px #ffffff); }
+}
+
+/* Audio Visualizer Waveform Canvas */
+.visualizer-wrapper {
+  width: 100%;
+  max-width: 560px;
+  height: 70px;
+  background: rgba(4, 12, 28, 0.7);
+  border: 1px solid var(--border-blue);
+  border-radius: 6px;
+  padding: 5px;
+  box-shadow: inset 0 0 15px rgba(0, 128, 255, 0.1);
+}
+
+#audioVisualizer {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ai-status-caption {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------------
+   Right Panel: Cyber Terminal Output Stream
+   ----------------------------------------------------------------------------- */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+}
+
+.terminal-body {
+  flex: 1;
+  padding: 12px;
+  background: rgba(2, 6, 14, 0.85);
+  overflow-y: auto;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cyan) transparent;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+  background: var(--border-cyan);
+  border-radius: 2px;
+}
+
+.log-line {
+  word-break: break-word;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.log-time {
+  color: #475569;
+  margin-right: 6px;
+}
+
+.log-tag {
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.log-sys .log-tag { color: var(--color-cyan); }
+.log-user .log-tag { color: #f8fafc; }
+.log-jarvis .log-tag { color: var(--color-green); }
+.log-gemini .log-tag { color: var(--color-purple); }
+.log-action .log-tag { color: var(--color-amber); }
+.log-error .log-tag { color: var(--color-red); }
+
+.log-msg {
+  color: #e2e8f0;
+}
+
+.log-jarvis .log-msg {
+  color: #a7f3d0;
+}
+
+.log-error .log-msg {
+  color: #fca5a5;
+}
+
+.terminal-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: rgba(3, 10, 24, 0.9);
+  border-top: 1px solid rgba(0, 128, 255, 0.2);
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+.status-indicator {
+  color: var(--color-green);
+}
+
+/* -----------------------------------------------------------------------------
+   Bottom HUD Dock & Input Controls
+   ----------------------------------------------------------------------------- */
+.hud-dock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(0deg, rgba(6, 18, 38, 0.95) 0%, rgba(3, 8, 18, 0.8) 100%);
+  border-top: 1px solid var(--border-cyan);
+  box-shadow: 0 -4px 20px rgba(0, 240, 255, 0.08);
+}
+
+/* Voice Mic Button */
+.mic-trigger-btn {
+  position: relative;
+  background: linear-gradient(135deg, #0e2a4a 0%, #004080 100%);
+  border: 1px solid var(--color-cyan);
+  color: var(--color-cyan);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.mic-trigger-btn:hover {
+  background: linear-gradient(135deg, #0055aa 0%, #0088cc 100%);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+  transform: scale(1.02);
+}
+
+.mic-trigger-btn.active {
+  background: linear-gradient(135deg, #78350f 0%, #b45309 100%);
+  border-color: var(--color-amber);
+  color: var(--color-amber);
+  box-shadow: 0 0 30px rgba(255, 183, 3, 0.6);
+  animation: pulse-amber 1s infinite alternate;
+}
+
+.mic-pulsar {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 10px;
+  border: 1px solid var(--color-cyan);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mic-trigger-btn.active .mic-pulsar {
+  animation: ring-expand 1.5s infinite;
+}
+
+@keyframes ring-expand {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* Directive Text Input Bar */
+.input-command-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(3, 10, 24, 0.85);
+  border: 1px solid var(--border-cyan);
+  border-radius: 8px;
+  padding: 4px 12px;
+  box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
+}
+
+.prompt-prefix {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-cyan);
+  margin-right: 10px;
+  letter-spacing: 1px;
+}
+
+#cmdInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--color-white);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+#cmdInput::placeholder {
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.btn-clear-input {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.btn-clear-input:hover {
+  color: var(--color-white);
+}
+
+/* Transmit Button */
+.btn-transmit {
+  background: linear-gradient(135deg, #0e2a4a 0%, #004080 100%);
+  border: 1px solid var(--border-cyan);
+  color: var(--color-cyan);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-transmit:hover {
+  background: rgba(0, 240, 255, 0.25);
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Sound FX & Voice Toggles */
+.sound-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-sfx {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-sfx:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+}
+
+.btn-sfx.active {
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  background: rgba(0, 240, 255, 0.12);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+}

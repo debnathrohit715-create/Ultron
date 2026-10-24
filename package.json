@@ -1,13 +1,27 @@
 {
-  "name": "ultron-ai",
+  "name": "jarvis-ai-hud",
   "version": "1.0.0",
-  "description": "Ultron AI Holographic Voice Assistant powered by Gemini and Wikipedia",
-  "main": "server.js",
+  "description": "JARVIS - Autonomous Sci-Fi Iron Man Desktop Interface",
+  "main": "main.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "electron .",
+    "start:all": "concurrently -k \"python backend/server.py\" \"electron .\"",
+    "backend": "python backend/server.py",
+    "gui:python": "python app_customtkinter.py"
   },
-  "keywords": ["ultron", "voice-assistant", "gemini", "wikipedia", "sci-fi", "hud"],
-  "author": "Antigravity",
-  "license": "MIT"
+  "keywords": [
+    "jarvis",
+    "ai",
+    "iron-man",
+    "hud",
+    "desktop-app",
+    "gemini",
+    "electron"
+  ],
+  "author": "Stark Industries",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron": "^41.2.0"
+  }
 }

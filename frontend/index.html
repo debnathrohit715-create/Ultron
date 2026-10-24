@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS // Stark Industries Mark VII</title>
+  <link rel="stylesheet" href="css/hud.css">
+</head>
+<body class="theme-dark">
+  <!-- Scanline CRT & Grid Hologram Overlay -->
+  <div class="hud-scanlines"></div>
+  <div class="hud-grid-background"></div>
+
+  <!-- Main HUD Container -->
+  <div class="hud-container">
+
+    <!-- Top Window Titlebar & HUD Header -->
+    <header class="hud-header">
+      <div class="header-left">
+        <div class="stark-logo">
+          <span class="stark-icon">◈</span>
+          <span class="stark-brand">STARK INDUSTRIES</span>
+          <span class="hud-badge">MARK VII // v4.2</span>
+        </div>
+        <div class="sys-clock" id="sysClock">00:00:00 UTC</div>
+      </div>
+
+      <div class="header-center">
+        <div class="system-title">J . A . R . V . I . S .</div>
+        <div class="system-subtitle">AUTONOMOUS NEURAL INTERFACE</div>
+      </div>
+
+      <div class="header-right">
+        <div class="connection-status online" id="supabaseStatus" title="Supabase Cloud Database">
+          <span class="status-dot" style="background-color: #00f59b; box-shadow: 0 0 8px #00f59b;"></span>
+          <span class="status-text" style="color: #00f59b;">SUPABASE CLOUD</span>
+        </div>
+        <div class="connection-status" id="wsStatus">
+          <span class="status-dot"></span>
+          <span class="status-text">INITIALIZING...</span>
+        </div>
+        <!-- Sci-Fi Window Controls -->
+        <div class="window-controls">
+          <button class="win-btn" id="btnMinimize" title="Minimize">─</button>
+          <button class="win-btn" id="btnMaximize" title="Maximize">□</button>
+          <button class="win-btn win-close" id="btnClose" title="Close">✕</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main HUD Workspace -->
+    <main class="hud-main">
+
+      <!-- LEFT COLUMN: SYSTEM TELEMETRY & RADAR -->
+      <aside class="hud-panel left-panel">
+        <div class="panel-header">
+          <span class="panel-title">SYSTEM TELEMETRY</span>
+          <span class="panel-code">[SYS.TEL]</span>
+        </div>
+
+        <!-- Telemetry Gauges -->
+        <div class="telemetry-block">
+          <div class="telemetry-item">
+            <div class="telemetry-meta">
+              <span>CPU UTILIZATION</span>
+              <span id="cpuVal">0%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-bar cyan" id="cpuBar" style="width: 15%"></div>
+            </div>
+          </div>
+
+          <div class="telemetry-item">
+            <div class="telemetry-meta">
+              <span>NEURAL MEMORY (RAM)</span>
+              <span id="ramVal">0%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-bar blue" id="ramBar" style="width: 40%"></div>
+            </div>
+          </div>
+
+          <div class="telemetry-item">
+            <div class="telemetry-meta">
+              <span>LOCAL STORAGE ALLOC</span>
+              <span id="diskVal">0%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-bar purple" id="diskBar" style="width: 55%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagnostic Radar Reticle -->
+        <div class="radar-box">
+          <div class="radar-ring r1"></div>
+          <div class="radar-ring r2"></div>
+          <div class="radar-sweep"></div>
+          <div class="radar-crosshair-h"></div>
+          <div class="radar-crosshair-v"></div>
+          <div class="radar-label">SUB-ROUTINE SCANNER ACTIVE</div>
+        </div>
+
+        <!-- Quick Protocol Launcher -->
+        <div class="quick-protocols">
+          <div class="protocol-title">QUICK PROTOCOLS</div>
+          <div class="protocol-grid">
+            <button class="proto-btn" data-cmd="open chrome">
+              <span class="proto-icon">🌐</span> Chrome
+            </button>
+            <button class="proto-btn" data-cmd="open discord">
+              <span class="proto-icon">💬</span> Discord
+            </button>
+            <button class="proto-btn" data-cmd="open steam">
+              <span class="proto-icon">🎮</span> Steam
+            </button>
+            <button class="proto-btn" data-cmd="open calculator">
+              <span class="proto-icon">🔢</span> Calc
+            </button>
+            <button class="proto-btn" data-cmd="system status">
+              <span class="proto-icon">⚡</span> Status
+            </button>
+            <button class="proto-btn" data-cmd="who is Tony Stark">
+              <span class="proto-icon">🛡</span> Wiki
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER STAGE: THE ARC REACTOR & AUDIO VISUALIZER -->
+      <section class="hud-center">
+        <!-- Visual State Indicator Pill -->
+        <div class="state-indicator-pill state-idle" id="statePill">
+          <span class="state-icon">●</span>
+          <span class="state-label" id="stateLabel">STANDBY // ALL SYSTEMS NOMINAL</span>
+        </div>
+
+        <!-- The Iconic Arc Reactor Core -->
+        <div class="arc-reactor-stage">
+          <div class="reactor-glow-ambient" id="reactorAura"></div>
+
+          <!-- Triple Rotating SVG Rings -->
+          <svg class="arc-reactor-svg" viewBox="0 0 400 400">
+            <defs>
+              <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                <stop offset="35%" stop-color="#00f0ff" stop-opacity="0.9" />
+                <stop offset="70%" stop-color="#0066ff" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#001833" stop-opacity="0" />
+              </radialGradient>
+              <filter id="neonBloom" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Outer HUD Static Orbit -->
+            <circle cx="200" cy="200" r="185" class="orbit-outer" />
+            <circle cx="200" cy="200" r="160" class="orbit-inner" />
+
+            <!-- Rotating Outer Ring (Counter-Clockwise) -->
+            <g class="ring-outer-rotating" id="ringOuter">
+              <!-- Segmented Ticks -->
+              <circle cx="200" cy="200" r="172" stroke="#00f0ff" stroke-width="3" stroke-dasharray="12 18" fill="none" opacity="0.6"/>
+              <circle cx="200" cy="200" r="148" stroke="#0080ff" stroke-width="2" stroke-dasharray="35 25" fill="none" opacity="0.5"/>
+            </g>
+
+            <!-- Rotating Middle Ring with Glyphs (Clockwise) -->
+            <g class="ring-middle-rotating" id="ringMiddle">
+              <circle cx="200" cy="200" r="125" stroke="#00f0ff" stroke-width="4" stroke-dasharray="45 15" fill="none" opacity="0.8"/>
+              <!-- Segment nodes -->
+              <polygon points="200,65 208,80 192,80" fill="#00f0ff" />
+              <polygon points="200,335 208,320 192,320" fill="#00f0ff" />
+              <polygon points="65,200 80,192 80,208" fill="#00f0ff" />
+              <polygon points="335,200 320,192 320,208" fill="#00f0ff" />
+            </g>
+
+            <!-- Inner Power Conduits (10 Triangular Capacitors) -->
+            <g class="capacitors-group" id="ringInner">
+              <circle cx="200" cy="200" r="95" stroke="#00f0ff" stroke-width="2" stroke-dasharray="8 6" fill="none" opacity="0.7"/>
+              <circle cx="200" cy="200" r="75" stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.4"/>
+            </g>
+
+            <!-- Pulsing Plasma Core -->
+            <circle cx="200" cy="200" r="55" fill="url(#coreGlow)" filter="url(#neonBloom)" class="arc-core" id="arcCore" />
+            <circle cx="200" cy="200" r="24" fill="#ffffff" filter="url(#neonBloom)" class="arc-nucleus" id="arcNucleus" />
+          </svg>
+        </div>
+
+        <!-- Real-Time Audio Waveform Canvas -->
+        <div class="visualizer-wrapper">
+          <canvas id="audioVisualizer" width="560" height="70"></canvas>
+        </div>
+
+        <div class="ai-status-caption" id="aiCaption">
+          Ready for directive. Click microphone or type below.
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: CYBER TERMINAL CONSOLE -->
+      <aside class="hud-panel right-panel">
+        <div class="panel-header">
+          <span class="panel-title">NEURAL TERMINAL OUTPUT</span>
+          <div class="terminal-actions">
+            <button class="action-btn" id="btnCopyTerminal" title="Copy Log Stream">COPY</button>
+            <button class="action-btn" id="btnClearTerminal" title="Clear Logs">CLEAR</button>
+          </div>
+        </div>
+
+        <!-- Terminal Output Stream -->
+        <div class="terminal-body" id="terminalStream">
+          <div class="log-line log-sys">
+            <span class="log-time">[00:00:00]</span>
+            <span class="log-tag">[SYSTEM]</span>
+            <span class="log-msg">Mark VII Autonomous Core initialized. Awaiting input.</span>
+          </div>
+        </div>
+
+        <div class="terminal-footer">
+          <span class="status-indicator">● LIVE FEED</span>
+          <span id="logCounter">1 EVENTS LOGGED</span>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- Bottom HUD Input Dock -->
+    <footer class="hud-dock">
+      <!-- Voice Mic Trigger Button -->
+      <button class="mic-trigger-btn" id="btnVoiceMic" title="Toggle Acoustic Capture">
+        <div class="mic-pulsar"></div>
+        <span class="mic-icon">🎤</span>
+        <span class="mic-text">LISTEN</span>
+      </button>
+
+      <!-- Directive Text Input Bar -->
+      <div class="input-command-wrapper">
+        <span class="prompt-prefix">JARVIS ></span>
+        <input
+          type="text"
+          id="cmdInput"
+          placeholder="Enter command (e.g. 'Open Chrome', 'Who is Tony Stark', 'Send WhatsApp to +1234567890 saying hello')..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="btn-clear-input" id="btnClearInput" title="Clear text">✕</button>
+      </div>
+
+      <!-- Execute Directive Button -->
+      <button class="btn-transmit" id="btnTransmit">
+        <span>TRANSMIT</span>
+        <span class="transmit-arrow">➔</span>
+      </button>
+
+      <!-- Audio Mute & Sound FX Switcher -->
+      <div class="sound-controls">
+        <button class="btn-sfx active" id="btnVoiceToggle" title="Toggle Spoken Voice Responses">🗣️ VOICE ON</button>
+        <button class="btn-sfx" id="btnTestVoice" title="Test Vocal Synthesis">▶ TEST VOICE</button>
+        <button class="btn-sfx active" id="btnSfxToggle" title="Toggle Sci-Fi Audio FX">🔊 SFX ON</button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio_fx.js"></script>
+  <script src="js/visualizer.js"></script>
+  <script src="js/supabase_client.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
