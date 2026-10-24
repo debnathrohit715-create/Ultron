@@ -1,0 +1,13 @@
+{
+  "name": "ultron-ai",
+  "version": "1.0.0",
+  "description": "Ultron AI Holographic Voice Assistant powered by Gemini and Wikipedia",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["ultron", "voice-assistant", "gemini", "wikipedia", "sci-fi", "hud"],
+  "author": "Antigravity",
+  "license": "MIT"
+}

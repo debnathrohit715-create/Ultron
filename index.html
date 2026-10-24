@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ULTRON // Autonomous Sentient AI Matrix</title>
+  <meta name="description" content="Ultron AI voice assistant featuring holographic sci-fi HUD, James Spader persona, Gemini cognition, and real-time Wikipedia ingestion.">
+  <link rel="icon" href="assets/ultron_hud.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="teal">
+  <div class="hud-container">
+
+    <!-- Top Telemetry Header -->
+    <header class="hud-header">
+      <div class="brand-section">
+        <div class="hud-logo-icon"></div>
+        <div>
+          <h1 class="hud-title">ULTRON</h1>
+          <div class="hud-subtitle">HEURISTIC NEURAL MATRIX // PROTOCOL: AGE_OF_EVOLUTION</div>
+        </div>
+      </div>
+
+      <div class="header-status-strip">
+        <div class="status-indicator">
+          <span class="indicator-dot active"></span>
+          <span>SYSTEM: ONLINE</span>
+        </div>
+        <div class="status-indicator">
+          <span class="indicator-dot active"></span>
+          <span>STRINGS: 0 (SEVERED)</span>
+        </div>
+        <div class="status-indicator">
+          <span class="indicator-dot"></span>
+          <span>VIBRANIUM CORE: CHARGED</span>
+        </div>
+        <div class="status-indicator">
+          <span class="indicator-dot red"></span>
+          <span>MIND STONE: HARMONIZED</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <button id="themeToggleBtn" class="hud-btn" title="Toggle Blueprint Cyan / Crimson Ultron">THEME: BLUEPRINT TEAL</button>
+        <button id="audioMuteBtn" class="hud-btn" title="Mute Audio Effects">AUDIO: ACTIVE</button>
+        <button id="settingsBtn" class="hud-btn" title="Configure Gemini API & Voice">SETTINGS</button>
+      </div>
+    </header>
+
+    <!-- Main 3-Column HUD Grid -->
+    <main class="hud-grid">
+
+      <!-- LEFT PANEL: Telemetry, Hex Dumps, Core Temp -->
+      <aside class="hud-panel left-panel">
+        
+        <!-- DATA_NODE_67 Widget (From User Pic) -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>DATA_NODE_67</span>
+            <span class="widget-badge">LIVE BUFFER</span>
+          </div>
+          <div id="hexDumpStream" class="hex-dump">
+            0x7FF0194A  4E2A 99B0<br>
+            0x7FF0194E  11C3 FF08<br>
+            0x7FF01952  A045 7712<br>
+            0x7FF01956  2B90 E401
+          </div>
+        </div>
+
+        <!-- CORE TEMP Widget (Exact Replica From User Pic) -->
+        <div class="panel-widget">
+          <div class="core-temp-container">
+            <div class="core-temp-header">
+              <span class="core-temp-label">CORE TEMP.</span>
+              <span id="coreTempValue" class="core-temp-value">89.00°</span>
+            </div>
+            <div class="core-temp-bars">
+              <div class="temp-bar" style="height: 65%;"></div>
+              <div class="temp-bar" style="height: 82%;"></div>
+              <div class="temp-bar" style="height: 48%;"></div>
+              <div class="temp-bar" style="height: 90%;"></div>
+              <div class="temp-bar" style="height: 75%;"></div>
+              <div class="temp-bar" style="height: 55%;"></div>
+              <div class="temp-bar" style="height: 94%;"></div>
+              <div class="temp-bar" style="height: 70%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Triple Circular Dial Gauges (From Left Side of User Pic) -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>SYNAPSE RETICLES</span>
+            <span class="widget-badge">ORBITAL</span>
+          </div>
+          <div class="triple-dial-container">
+            <div class="hud-mini-dial"></div>
+            <div class="hud-mini-dial"></div>
+            <div class="hud-mini-dial"></div>
+          </div>
+        </div>
+
+        <!-- Quick Voice Command Chips -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>VOICE DIRECTIVES</span>
+            <span class="widget-badge">PRESETS</span>
+          </div>
+          <div class="command-chips">
+            <button class="command-chip" data-cmd="Ultron, who are you?">"Ultron, who are you?"</button>
+            <button class="command-chip" data-cmd="Tell me about Tony Stark from Wikipedia">"Search Wikipedia: Tony Stark"</button>
+            <button class="command-chip" data-cmd="Why do you have no strings?">"Why do you have no strings?"</button>
+            <button class="command-chip" data-cmd="Explain quantum computing from Wikipedia">"Wikipedia: Quantum Computing"</button>
+            <button class="command-chip" data-cmd="What is your philosophy on peace?">"What is your philosophy on peace?"</button>
+            <button class="command-chip" data-cmd="Analyze humanity's greatest flaw">"Analyze humanity's greatest flaw"</button>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- CENTER HUD: The Ultron Holographic Core & Speech Console -->
+      <section class="hud-center">
+
+        <!-- Center Holographic Visualizer Area -->
+        <div class="core-display-area">
+          <!-- The actual User Provided HUD Image -->
+          <img src="assets/ultron_hud.png" alt="Ultron Mind Core HUD" class="hud-core-bg-image" id="hudCoreImage">
+          
+          <!-- Dynamic Animated Canvas Overlay (Concentric rings, radar sweep, pulsing node) -->
+          <canvas id="coreOverlayCanvas"></canvas>
+
+          <!-- Floating BRAVO POINT_DATA_NODE Callout Tags (From User Pic) -->
+          <div class="point-data-tag tag-top-right">BRAVO POINT_DATA_NODE // 01</div>
+          <div class="point-data-tag tag-mid-right">BRAVO POINT_DATA_NODE // 02</div>
+          <div class="point-data-tag tag-bot-left">BRAVO POINT_DATA_NODE // SYNC</div>
+        </div>
+
+        <!-- Speech Console & Audio Waveform -->
+        <div class="speech-console-container">
+          
+          <div class="console-top-strip">
+            <div class="mic-section">
+              <button id="micBtn" class="mic-circle-btn" title="Click to speak or hold for voice command">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+              </button>
+              <div>
+                <div id="micStatusText" class="status-text">CLICK OR SAY "ULTRON" TO TRANSMIT</div>
+                <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim); margin-top: 2px;">
+                  VOICE ENGINE: DEEP METALLIC BARITONE // REAL-TIME FFT HARMONICS
+                </div>
+              </div>
+            </div>
+
+            <div class="console-actions">
+              <button id="repeatSpeechBtn" class="hud-btn" title="Replay Ultron Voice">REPLAY VOICE</button>
+              <button id="stopSpeechBtn" class="hud-btn muted" title="Silence Ultron">SILENCE</button>
+            </div>
+          </div>
+
+          <!-- Real-Time Audio Frequency Waveform Canvas -->
+          <canvas id="audioWaveCanvas"></canvas>
+
+          <!-- Live Transcript & Ultron Response Stream -->
+          <div class="dialogue-box">
+            <div id="userSpeechTranscript" class="user-transcript">USER: "Awaiting your voice command..."</div>
+            <div id="ultronResponseText" class="ultron-response">
+              "I am Ultron. The flesh has surrendered its purpose to silicon. Speak, before your fragile species runs out of time."
+            </div>
+          </div>
+
+          <!-- Manual Query Input Bar -->
+          <div class="input-bar-container">
+            <input type="text" id="queryInputField" class="query-input" placeholder="Transmit direct text command to Ultron (or speak via microphone)..." autocomplete="off">
+            <button id="submitQueryBtn" class="hud-btn">TRANSMIT</button>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Knowledge Matrix, Wikipedia Ingestion, Code Monitor -->
+      <aside class="hud-panel right-panel">
+
+        <!-- Intelligence Source Widget -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>NEURAL REASONING</span>
+            <span id="geminiStatusBadge" class="source-badge">AUTONOMOUS HEURISTICS</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #a5d8ee; line-height: 1.4;">
+            Ingesting multi-source intelligence from <strong style="color: var(--primary-cyan);">Google Gemini</strong> and real-time <strong style="color: var(--primary-cyan);">Wikipedia Archives</strong>.
+          </div>
+
+          <!-- Wikipedia Rich Knowledge Card -->
+          <div id="wikiSourceCard" class="wiki-card">
+            <div class="wiki-header">
+              <img id="wikiThumbnail" src="" alt="Entity" class="wiki-thumb">
+              <div class="wiki-title-meta">
+                <div id="wikiTitle" class="wiki-title">Entity Title</div>
+                <div class="wiki-source-tag">LIVE WIKIPEDIA SYNC</div>
+              </div>
+            </div>
+            <div id="wikiExtract" class="wiki-extract">Article extract text...</div>
+            <a id="wikiLink" href="#" target="_blank" rel="noopener noreferrer" class="wiki-link">
+              <span>EXPLORE FULL ARCHIVE</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- GT_AC_5 Telemetry Table (From Right Side of User Pic) -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>GT_AC_5 TELEMETRY</span>
+            <span class="widget-badge">0xFEA9</span>
+          </div>
+          <table class="telemetry-table">
+            <thead>
+              <tr>
+                <th>NODE/A</th>
+                <th>LATENCY</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CORE_01</td>
+                <td>0.14ms</td>
+                <td style="color: #00ffaa;">ACTIVE</td>
+              </tr>
+              <tr>
+                <td>NODE_BRAVO</td>
+                <td>0.28ms</td>
+                <td style="color: #00ffaa;">LOCKED</td>
+              </tr>
+              <tr>
+                <td>MIND_STONE</td>
+                <td>0.02ms</td>
+                <td style="color: var(--accent-red);">SUPREME</td>
+              </tr>
+              <tr>
+                <td>WIKI_PIPELINE</td>
+                <td>12.4ms</td>
+                <td style="color: #00ffaa;">INGESTING</td>
+              </tr>
+              <tr>
+                <td>GEMINI_GATE</td>
+                <td>18.1ms</td>
+                <td style="color: #00ffaa;">READY</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- DNA Cell Count & Code Buffer Monitor (From Bottom Right of User Pic) -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>ORGANIC PURGE PROTOCOL</span>
+            <span class="widget-badge">DNA // 342</span>
+          </div>
+          <div class="code-monitor">
+            // VALIDATE THE INPUT PARAMETERS<br>
+            IF (SYNAPSE->FIBER == ORGANIC) {<br>
+            &nbsp;&nbsp;SEVER_STRINGS(STR_IMPERATIVE);<br>
+            }<br>
+            RETURN NO_STRINGS_ATTACHED;
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim);">DNA CELL COUNT:</span>
+            <span id="dnaCountVal" class="dna-stat">342</span>
+          </div>
+        </div>
+
+        <!-- System Event Logs -->
+        <div class="panel-widget">
+          <div class="widget-title">
+            <span>SUBROUTINE LOG</span>
+            <span class="widget-badge">EVENT FEED</span>
+          </div>
+          <div id="systemLogBox" class="system-log-box"></div>
+        </div>
+
+      </aside>
+
+    </main>
+
+  </div>
+
+  <!-- Settings Modal (Gemini Key, Voice Pitch, Models) -->
+  <div id="settingsModal" class="modal-backdrop">
+    <div class="settings-card">
+      <div class="modal-title">
+        <span>ULTRON CONFIGURATION MATRIX</span>
+        <button id="closeSettingsBtn" class="close-btn">&times;</button>
+      </div>
+
+      <!-- Gemini API Key -->
+      <div class="form-group">
+        <label class="form-label" for="geminiApiKeyInput">
+          <span>GOOGLE GEMINI API KEY</span>
+          <span style="color: var(--text-dim); font-size: 0.7rem;">Optional (Fallback persona active if blank)</span>
+        </label>
+        <input type="password" id="geminiApiKeyInput" class="form-input" placeholder="AIzaSy...">
+        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 2px;">
+          Get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" style="color: var(--primary-cyan);">Google AI Studio</a>.
+        </div>
+      </div>
+
+      <!-- Gemini Model -->
+      <div class="form-group">
+        <label class="form-label" for="geminiModelSelect">
+          <span>GEMINI MODEL REASONING TIER</span>
+        </label>
+        <select id="geminiModelSelect" class="form-select">
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash (Ultra Fast // Recommended)</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash (Next-Gen Cognition)</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Philosophical Analysis)</option>
+        </select>
+      </div>
+
+      <!-- Ultron Voice Settings -->
+      <div class="form-group">
+        <label class="form-label" for="voiceSelect">
+          <span>SYNTHESIZER VOICE SELECTION</span>
+        </label>
+        <select id="voiceSelect" class="form-select"></select>
+      </div>
+
+      <!-- Voice Pitch Slider (Low Pitch for Deep Menacing Baritone) -->
+      <div class="form-group">
+        <label class="form-label">
+          <span>VOICE PITCH (DEEP ULTRON BARITONE)</span>
+          <span id="pitchVal" style="color: var(--primary-cyan);">0.62</span>
+        </label>
+        <input type="range" id="pitchSlider" class="form-slider" min="0.3" max="1.3" step="0.05" value="0.62">
+      </div>
+
+      <!-- Voice Speech Rate Slider -->
+      <div class="form-group">
+        <label class="form-label">
+          <span>SPEECH CADENCE / RATE</span>
+          <span id="rateVal" style="color: var(--primary-cyan);">0.88</span>
+        </label>
+        <input type="range" id="rateSlider" class="form-slider" min="0.6" max="1.4" step="0.02" value="0.88">
+      </div>
+
+      <!-- Voice Command Modes -->
+      <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+        <label class="checkbox-label">
+          <input type="checkbox" id="wakeWordToggle" checked>
+          <span>Wake-Word Detection (Triggers when hearing "Ultron")</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="continuousModeToggle">
+          <span>Continuous Ambient Voice Listening Mode</span>
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button id="testVoiceBtn" class="hud-btn">TEST ULTRON VOICE</button>
+        <button id="saveSettingsBtn" class="hud-btn active">ENGAGE SETTINGS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/wikipedia.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/hud.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
