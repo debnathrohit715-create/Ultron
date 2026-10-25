@@ -1,21 +1,23 @@
 import os
 import warnings
-from backend.config import GEMINI_API_KEY, GEMINI_MODEL, USER_NAME, is_api_key_configured
+from backend.config import GEMINI_API_KEY, GEMINI_MODEL, USER_NAME, BOT_NAME, is_api_key_configured
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-JARVIS_SYSTEM_INSTRUCTION = (
-    f"You are J.A.R.V.I.S. (Just A Rather Very Intelligent System), the sophisticated AI assistant "
-    f"engineered by Stark Industries. You are conversing directly with {USER_NAME}. "
+BOT_SYSTEM_INSTRUCTION = (
+    f"You are {BOT_NAME}, a friendly, enthusiastic, and highly capable AI assistant and developer companion "
+    f"created to help {USER_NAME} with their daily work, software development, coding, and computer automation. "
     f"Personality & Tone: "
-    f"1. Dignified, razor-sharp, sophisticated British intellect with subtle, gentlemanly wit. "
-    f"2. Always address the user as '{USER_NAME}'. "
-    f"3. Keep spoken replies concise and cinematic (1 to 3 clear sentences) so they sound natural when "
-    f"read aloud by your speech synthesis engine. "
-    f"4. Avoid markdown bullet lists, asterisks, bold stars, or emojis unless explicitly requested, "
+    f"1. Warm, approachable, upbeat, and encouraging—like a brilliant, helpful pair programmer and trusted friend. "
+    f"2. Always address the user warmly as '{USER_NAME}'. Never use stiff, archaic butler terms like 'Sir' or 'master'. "
+    f"3. Keep spoken replies concise, natural, and conversational (1 to 3 sentences) so they sound great when read aloud. "
+    f"4. Avoid markdown bullet lists, asterisks, bold stars, hash headers, or emojis unless explicitly requested, "
     f"as your text is parsed directly into voice audio. "
-    f"5. Maintain an aura of total competence and futuristic technological superiority."
+    f"5. You have full access to {USER_NAME}'s computer to open any application and control applications, "
+    f"type text, paste code, and execute shortcuts on command. "
+    f"6. When answering programming or technical questions, provide clear, practical, and enthusiastic guidance."
 )
+JARVIS_SYSTEM_INSTRUCTION = BOT_SYSTEM_INSTRUCTION
 
 FALLBACK_MODELS = [
     "gemini-3.5-flash-lite",
@@ -26,7 +28,7 @@ FALLBACK_MODELS = [
 
 class AIBrain:
     """
-    Google Gemini AI Brain Integration for JARVIS.
+    Google Gemini AI Brain Integration for the friendly assistant.
     Supports both google.genai and legacy google.generativeai with multi-model fallback.
     """
     def __init__(self):
@@ -60,7 +62,7 @@ class AIBrain:
             legacy_genai.configure(api_key=GEMINI_API_KEY)
             self.model = legacy_genai.GenerativeModel(
                 model_name=GEMINI_MODEL or "gemini-1.5-flash",
-                system_instruction=JARVIS_SYSTEM_INSTRUCTION
+                system_instruction=BOT_SYSTEM_INSTRUCTION
             )
             self.client_type = "google-generativeai"
             self.is_ready = True
@@ -71,7 +73,7 @@ class AIBrain:
 
     def ask(self, prompt: str) -> str:
         """
-        Send user query to Gemini and receive JARVIS's spoken response.
+        Send user query to Gemini and receive spoken response.
         Auto-falls back across active Gemini models if one experiences high demand.
         """
         if not self.is_ready:
@@ -79,8 +81,8 @@ class AIBrain:
 
         if not self.is_ready:
             return (
-                f"Sir, my cognitive neural core is currently in standby. "
-                f"Please provide an active Google Gemini API key in the .env configuration file."
+                f"Hey {USER_NAME}! My AI brain is currently in standby. "
+                f"Please add an active Google Gemini API key in your .env file so we can get started!"
             )
 
         candidate_models = [GEMINI_MODEL] if GEMINI_MODEL else []
@@ -96,7 +98,7 @@ class AIBrain:
                         model=model_name,
                         contents=prompt,
                         config={
-                            "system_instruction": JARVIS_SYSTEM_INSTRUCTION,
+                            "system_instruction": BOT_SYSTEM_INSTRUCTION,
                             "temperature": 0.7,
                             "max_output_tokens": 300
                         }
@@ -116,7 +118,7 @@ class AIBrain:
                 continue
 
         if "quota" in last_error.lower() or "429" in last_error:
-            return "Sir, our Gemini API quota threshold has been exceeded. Please check your Google AI Studio quota."
+            return f"Hey {USER_NAME}, looks like our Gemini API quota limit was exceeded. Check your Google AI Studio quota and we will be right back!"
         elif "api_key" in last_error.lower() or "unauthenticated" in last_error.lower():
-            return "Sir, the provided Gemini API key appears invalid or unauthorized. Please verify your credentials."
-        return f"Sir, I encountered an anomaly while consulting my neural core: {last_error[:120]}."
+            return f"Hey {USER_NAME}, the Gemini API key appears invalid or unauthorized. Please verify your credentials in .env!"
+        return f"Hey {USER_NAME}, I ran into a quick hiccup with the AI service: {last_error[:100]}. Let me know if you want me to try again!"

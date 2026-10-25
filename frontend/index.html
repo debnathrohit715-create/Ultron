@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS // Stark Industries Mark VII</title>
+  <title>NOVA // AI Work & Developer Assistant</title>
   <link rel="stylesheet" href="css/hud.css">
 </head>
 <body class="theme-dark">
@@ -18,16 +18,16 @@
     <header class="hud-header">
       <div class="header-left">
         <div class="stark-logo">
-          <span class="stark-icon">◈</span>
-          <span class="stark-brand">STARK INDUSTRIES</span>
-          <span class="hud-badge">MARK VII // v4.2</span>
+          <span class="stark-icon">✦</span>
+          <span class="stark-brand">NOVA DEV SUITE</span>
+          <span class="hud-badge">DEV COPILOT // v5.0</span>
         </div>
         <div class="sys-clock" id="sysClock">00:00:00 UTC</div>
       </div>
 
       <div class="header-center">
-        <div class="system-title">J . A . R . V . I . S .</div>
-        <div class="system-subtitle">AUTONOMOUS NEURAL INTERFACE</div>
+        <div class="system-title">N . O . V . A .</div>
+        <div class="system-subtitle">FRIENDLY WORK & DEV COPILOT</div>
       </div>
 
       <div class="header-right">
@@ -103,25 +103,25 @@
 
         <!-- Quick Protocol Launcher -->
         <div class="quick-protocols">
-          <div class="protocol-title">QUICK PROTOCOLS</div>
+          <div class="protocol-title">QUICK DEV ACTIONS</div>
           <div class="protocol-grid">
+            <button class="proto-btn" data-cmd="open vscode">
+              <span class="proto-icon">💻</span> VS Code
+            </button>
+            <button class="proto-btn" data-cmd="open terminal">
+              <span class="proto-icon">⚡</span> Terminal
+            </button>
             <button class="proto-btn" data-cmd="open chrome">
               <span class="proto-icon">🌐</span> Chrome
             </button>
-            <button class="proto-btn" data-cmd="open discord">
-              <span class="proto-icon">💬</span> Discord
-            </button>
-            <button class="proto-btn" data-cmd="open steam">
-              <span class="proto-icon">🎮</span> Steam
-            </button>
-            <button class="proto-btn" data-cmd="open calculator">
-              <span class="proto-icon">🔢</span> Calc
+            <button class="proto-btn" data-cmd="open notepad">
+              <span class="proto-icon">📝</span> Notepad
             </button>
             <button class="proto-btn" data-cmd="system status">
-              <span class="proto-icon">⚡</span> Status
+              <span class="proto-icon">📊</span> Status
             </button>
-            <button class="proto-btn" data-cmd="who is Tony Stark">
-              <span class="proto-icon">🛡</span> Wiki
+            <button class="proto-btn" data-cmd="read clipboard">
+              <span class="proto-icon">📋</span> Clipboard
             </button>
           </div>
         </div>
@@ -215,7 +215,7 @@
           <div class="log-line log-sys">
             <span class="log-time">[00:00:00]</span>
             <span class="log-tag">[SYSTEM]</span>
-            <span class="log-msg">Mark VII Autonomous Core initialized. Awaiting input.</span>
+            <span class="log-msg">Nova Dev Assistant initialized. Ready to help you code and work!</span>
           </div>
         </div>
 
@@ -238,11 +238,11 @@
 
       <!-- Directive Text Input Bar -->
       <div class="input-command-wrapper">
-        <span class="prompt-prefix">JARVIS ></span>
+        <span class="prompt-prefix">NOVA ></span>
         <input
           type="text"
           id="cmdInput"
-          placeholder="Enter command (e.g. 'Open Chrome', 'Who is Tony Stark', 'Send WhatsApp to +1234567890 saying hello')..."
+          placeholder="Enter command (e.g. 'Open VS Code', 'Open notepad and type my notes', 'Save file', 'Search react hooks on google')..."
           autocomplete="off"
           spellcheck="false"
         />

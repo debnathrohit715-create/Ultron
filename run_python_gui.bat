@@ -1,7 +1,7 @@
 @echo off
-title JARVIS Python GUI Launcher
+title NOVA Python GUI Launcher
 echo ==============================================================================
-echo [STARK INDUSTRIES] Launching JARVIS CustomTkinter Pure Python Desktop App...
+echo [NOVA] Launching Nova Work & Developer Desktop App...
 echo ==============================================================================
 
 cd /d "%~dp0"

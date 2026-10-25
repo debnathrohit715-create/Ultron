@@ -3,6 +3,8 @@ import threading
 from typing import Tuple, Optional
 import pywhatkit
 
+from backend.config import USER_NAME, BOT_NAME
+
 class CommsManager:
     """
     Handles external communications including automated WhatsApp dispatch
@@ -11,9 +13,8 @@ class CommsManager:
     def __init__(self):
         # Configurable alias phone directory
         self.contacts = {
-            "pepper": "+10000000000",
-            "rhodey": "+10000000001",
-            "happy": "+10000000002"
+            "friend": "+10000000000",
+            "team": "+10000000001"
         }
 
     def add_contact(self, name: str, phone: str):
@@ -22,10 +23,6 @@ class CommsManager:
     def parse_whatsapp_command(self, text: str) -> Optional[Tuple[str, str]]:
         """
         Extracts phone number / contact name and message from voice command.
-        Example formats:
-          - "send whatsapp to +1234567890 saying hello sir"
-          - "whatsapp +1234567890 message meeting at noon"
-          - "send message to +1234567890 that I am arriving"
         """
         clean_text = text.strip()
 
@@ -51,7 +48,7 @@ class CommsManager:
             if not message:
                 # Text following the phone number
                 after_phone = clean_text[phone_match.end():].strip()
-                message = after_phone or "Transmission from JARVIS."
+                message = after_phone or f"Message from {USER_NAME} via {BOT_NAME}."
         else:
             # Check for contact name alias
             for contact_name, contact_phone in self.contacts.items():
@@ -61,7 +58,7 @@ class CommsManager:
                     if m:
                         message = m.group(1).strip()
                     else:
-                        message = f"Hello, this is an automated dispatch from JARVIS for {contact_name.capitalize()}."
+                        message = f"Hello from {USER_NAME} via {BOT_NAME}."
                     break
 
         if recipient:
@@ -90,7 +87,4 @@ class CommsManager:
         thread = threading.Thread(target=_worker, daemon=True)
         thread.start()
 
-        return True, (
-            f"Sir, transmitting WhatsApp dispatch to {phone_number}. "
-            f"Browser automation sequence initiated."
-        )
+        return True, f"Sending that WhatsApp message to {phone_number} right now for you!"

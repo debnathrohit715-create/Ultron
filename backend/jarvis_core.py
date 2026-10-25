@@ -1,7 +1,7 @@
 import datetime
 import psutil
 from typing import Callable, Optional
-from backend.config import USER_NAME
+from backend.config import USER_NAME, BOT_NAME
 from backend.ai_brain import AIBrain
 from backend.voice_io import VoiceOutput, VoiceInput
 from backend.info_retrieval import InfoRetriever
@@ -11,10 +11,9 @@ from backend.supabase_db import supabase_db
 
 class JarvisCore:
     """
-    Central JARVIS Intelligence & Command Orchestrator.
-    Coordinates Ears (VoiceInput), Mouth (VoiceOutput), Brain (Gemini),
-    Archives (Wikipedia), Hands (PCAutomation), Comms (WhatsApp),
-    and Cloud Database Memory (Supabase).
+    Central Intelligence & Command Orchestrator for the friendly AI Assistant.
+    Coordinates Voice Input/Output, Gemini AI Brain, PC Automation & App Control,
+    Information Retrieval, External Comms, and Cloud Database Memory.
     """
     def __init__(self,
                  on_state_change: Optional[Callable[[str], None]] = None,
@@ -26,7 +25,7 @@ class JarvisCore:
         self.current_state = "IDLE"
 
         # Initialize Subsystems
-        self._log("SYS", "Initializing Stark Industries Mark VII System Architecture...", "INFO")
+        self._log("SYS", f"Initializing {BOT_NAME} Intelligent Assistant Core...", "INFO")
         self.brain = AIBrain()
         self.retriever = InfoRetriever()
         self.automation = PCAutomation()
@@ -40,7 +39,7 @@ class JarvisCore:
         self.voice_in = VoiceInput()
 
         self._set_state("IDLE")
-        self._log("SYS", f"All neural pathways online. Cloud memory synchronized with Supabase. Welcome back, {USER_NAME}.", "SUCCESS")
+        self._log("SYS", f"All systems ready. Hello {USER_NAME}! I'm {BOT_NAME}, your friendly developer and workstation assistant.", "SUCCESS")
 
     def _set_state(self, new_state: str):
         self.current_state = new_state
@@ -55,19 +54,19 @@ class JarvisCore:
 
     def _on_speech_start(self, text: str):
         self._set_state("SPEAKING")
-        self._log("JARVIS", text, "VOICE")
+        self._log(BOT_NAME.upper(), text, "VOICE")
         if self.on_speak:
             try:
                 self.on_speak(text)
             except Exception as e:
-                print(f"[JARVIS_CORE] on_speak callback error: {e}")
+                print(f"[{BOT_NAME}_CORE] on_speak callback error: {e}")
 
     def _on_speech_done(self):
         self._set_state("IDLE")
 
     def process_query(self, user_query: str, source: str = "text") -> str:
         """
-        Processes text/voice directive and returns spoken response string.
+        Processes text or voice directive and returns spoken response string.
         Saves query and response to Supabase cloud database.
         """
         query = user_query.strip()
@@ -99,40 +98,56 @@ class JarvisCore:
             parsed = self.comms.parse_whatsapp_command(query)
             if parsed:
                 phone, msg = parsed
-                self._log("COMMS", f"Dispatching WhatsApp payload to {phone}: '{msg}'", "ACTION")
+                self._log("COMMS", f"Dispatching WhatsApp message to {phone}: '{msg}'", "ACTION")
                 success, response = self.comms.send_whatsapp(phone, msg)
                 self.voice_out.speak(response)
                 supabase_db.save_directive_async(query, "SUCCESS" if success else "FAILED", response)
                 supabase_db.save_conversation_async(query, response, source)
                 return response
             else:
-                response = f"Sir, please specify recipient international phone number and message."
+                response = f"Hey {USER_NAME}, please specify the phone number and message for WhatsApp."
                 self.voice_out.speak(response)
                 supabase_db.save_conversation_async(query, response, source)
                 return response
 
-        # 4. PC Application Launching / Automation
-        app_launch_triggers = ["open ", "launch ", "start ", "run ", "bring up "]
+        # 4. PC Application Control Directives (Typing into apps, Shortcuts, Window management, Compound actions)
+        action_result = self.automation.parse_and_execute_directive(query)
+        if action_result is not None:
+            success, response = action_result
+            self._log("AUTOMATION", f"Executed directive: '{query}' -> {response}", "ACTION" if success else "WARNING")
+            self.voice_out.speak(response)
+            supabase_db.save_directive_async(query, "SUCCESS" if success else "FAILED", response)
+            supabase_db.save_conversation_async(query, response, source)
+            return response
+
+        # 5. Launch Any Application on the Device
+        app_launch_triggers = ["open ", "launch ", "start ", "run ", "bring up ", "fire up "]
         if any(lower_q.startswith(trig) for trig in app_launch_triggers) or lower_q in ["lock pc", "lock screen", "calculator", "notepad", "task manager"]:
-            self._log("AUTOMATION", f"Resolving execution target for '{query}'", "ACTION")
+            self._log("AUTOMATION", f"Locating and launching target for '{query}'", "ACTION")
             success, response = self.automation.launch_app(query)
             self.voice_out.speak(response)
             supabase_db.save_directive_async(query, "SUCCESS" if success else "FAILED", response)
             supabase_db.save_conversation_async(query, response, source)
             return response
 
-        # 5. Wikipedia Research Command
+        # 6. Wikipedia Information Query
         wiki_triggers = ["who is ", "what is ", "tell me about ", "wikipedia ", "search wiki ", "research "]
         if any(lower_q.startswith(trig) for trig in wiki_triggers) and not any(term in lower_q for term in ["time", "date", "weather"]):
-            self._log("WIKI", f"Querying Wikipedia archives: '{query}'", "INFO")
+            self._log("WIKI", f"Searching Wikipedia for: '{query}'", "INFO")
             response = self.retriever.search_and_summarize(query, sentences=2)
             self.voice_out.speak(response)
             supabase_db.save_conversation_async(query, response, source)
             return response
 
-        # 6. General Cognitive Query -> Google Gemini AI Brain
-        self._log("GEMINI", f"Neural synthesis via Gemini for '{query}'", "INFO")
+        # 7. General Developer Guidance & Cognitive Query -> Google Gemini AI Brain
+        self._log("GEMINI", f"Consulting AI Brain for: '{query}'", "INFO")
         response = self.brain.ask(query)
+
+        # Check if the user asked to paste or type the generated code/result directly into their active editor
+        if any(paste_hint in lower_q for paste_hint in ["paste it in my editor", "paste it", "type it in my code", "put it in my file"]):
+            self.automation.type_text(response)
+            self._log("AUTOMATION", f"Pasted generated output into active window.", "ACTION")
+
         self.voice_out.speak(response)
         supabase_db.save_conversation_async(query, response, source)
         return response
@@ -142,36 +157,36 @@ class JarvisCore:
         Activates microphone, captures audio, transcribes, and executes command.
         """
         self._set_state("LISTENING")
-        self._log("EARS", "Acoustic receptors active. Listening for input...", "INFO")
+        self._log("EARS", "Microphone listening for your command...", "INFO")
 
         try:
             recognized_text = self.voice_in.listen(duration=5.0)
             if not recognized_text:
                 self._set_state("IDLE")
-                self._log("EARS", "No audio stream detected or threshold timed out.", "WARNING")
+                self._log("EARS", "No speech detected.", "WARNING")
                 return ""
             return self.process_query(recognized_text, source="voice")
         except Exception as e:
             self._set_state("IDLE")
-            self._log("EARS", f"Acoustic receptor error: {e}", "ERROR")
-            err_msg = f"Sir, I encountered an issue accessing the acoustic sensors."
+            self._log("EARS", f"Microphone error: {e}", "ERROR")
+            err_msg = f"Hey {USER_NAME}, I had trouble accessing the microphone."
             self.voice_out.speak(err_msg)
             return err_msg
 
     def get_system_diagnostics(self) -> str:
         """
-        Compile hardware telemetry report.
+        Compile friendly hardware telemetry report.
         """
         cpu = psutil.cpu_percent(interval=0.1)
         ram = psutil.virtual_memory().percent
         battery = psutil.sensors_battery()
-        bat_str = f"{battery.percent}%" if battery else "Mains AC Power"
+        bat_str = f"{battery.percent}%" if battery else "Mains Power"
         boot_time = datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%H:%M")
 
         report = (
-            f"Sir, core diagnostics are optimal. CPU utilization is at {cpu} percent, "
-            f"memory allocation at {ram} percent, and power grid is on {bat_str}. "
-            f"Systems active since {boot_time}."
+            f"Hey {USER_NAME}! Your workstation is running smoothly. CPU usage is at {cpu} percent, "
+            f"memory allocation is at {ram} percent, and power is on {bat_str}. "
+            f"System has been active since {boot_time}!"
         )
         return report
 

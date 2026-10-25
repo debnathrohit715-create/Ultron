@@ -1,7 +1,7 @@
 @echo off
-title JARVIS Mark VII Launcher
+title NOVA Work & Developer Assistant Launcher
 echo ==============================================================================
-echo [STARK INDUSTRIES] Launching JARVIS Mark VII Native Desktop App...
+echo [NOVA] Launching Nova Work & Developer Desktop App...
 echo ==============================================================================
 
 cd /d "%~dp0"

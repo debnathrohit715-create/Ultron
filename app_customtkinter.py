@@ -7,6 +7,7 @@ import datetime
 import tkinter as tk
 import customtkinter as ctk
 import psutil
+from backend.config import BOT_NAME, USER_NAME
 from backend.jarvis_core import JarvisCore
 
 class JarvisCustomTkinterApp(ctk.CTk):
@@ -14,7 +15,7 @@ class JarvisCustomTkinterApp(ctk.CTk):
         super().__init__()
 
         # Window Configuration
-        self.title("J.A.R.V.I.S. // STARK INDUSTRIES MARK VII")
+        self.title(f"{BOT_NAME} // WORK & DEVELOPER ASSISTANT")
         self.geometry("1100x720")
         self.minsize(900, 600)
         ctk.set_appearance_mode("dark")
@@ -32,7 +33,7 @@ class JarvisCustomTkinterApp(ctk.CTk):
         self.c_red = "#ff0055"
         self.c_purple = "#b5179e"
 
-        # Initialize JARVIS Backend
+        # Initialize Backend
         self.jarvis = JarvisCore(
             on_state_change=self._backend_state_callback,
             on_terminal_log=self._backend_log_callback
@@ -48,7 +49,7 @@ class JarvisCustomTkinterApp(ctk.CTk):
 
         self.title_lbl = ctk.CTkLabel(
             self.header_frame,
-            text="J . A . R . V . I . S .",
+            text=f"{' . '.join(list(BOT_NAME.upper()))}",
             font=ctk.CTkFont(family="Consolas", size=24, weight="bold"),
             text_color=self.c_cyan
         )
@@ -56,7 +57,7 @@ class JarvisCustomTkinterApp(ctk.CTk):
 
         self.sub_lbl = ctk.CTkLabel(
             self.header_frame,
-            text="STARK INDUSTRIES OS // MARK VII",
+            text="WORK & DEVELOPER ASSISTANT // v5.0",
             font=ctk.CTkFont(family="Consolas", size=12),
             text_color="#64748b"
         )
@@ -200,7 +201,7 @@ class JarvisCustomTkinterApp(ctk.CTk):
 
         self.command_entry = ctk.CTkEntry(
             self.input_frame,
-            placeholder_text="Enter vocal command or query (e.g. 'Open Chrome', 'Who is Tony Stark', 'System status')...",
+            placeholder_text="Ask anything or command your PC (e.g. 'Open VS Code', 'Open notepad and type notes', 'Save file', 'Status')...",
             font=ctk.CTkFont("Consolas", 13),
             fg_color="#050e1d",
             text_color="#f8fafc",

@@ -11,7 +11,7 @@ import json
 import datetime
 import traceback
 import websockets
-from backend.config import SERVER_HOST, SERVER_PORT
+from backend.config import SERVER_HOST, SERVER_PORT, BOT_NAME, USER_NAME
 from backend.jarvis_core import JarvisCore
 from backend.supabase_db import supabase_db
 
@@ -123,7 +123,9 @@ async def handle_client(websocket):
     # Send initial hand-shake
     initial_payload = {
         "type": "handshake",
-        "system": "JARVIS Mark VII",
+        "system": f"{BOT_NAME} Workstation Assistant",
+        "botName": BOT_NAME,
+        "userName": USER_NAME,
         "state": jarvis.current_state if jarvis else "IDLE",
         "telemetry": jarvis.get_telemetry_data() if jarvis else {},
         "timestamp": datetime.datetime.now().strftime("%H:%M:%S")
@@ -174,7 +176,7 @@ async def main():
     global loop, jarvis
     loop = asyncio.get_running_loop()
 
-    print("[SERVER] Initializing JARVIS Core Engine...")
+    print(f"[SERVER] Initializing {BOT_NAME} Core Engine...")
     jarvis = JarvisCore(
         on_state_change=on_state_change,
         on_terminal_log=on_terminal_log,
@@ -189,11 +191,11 @@ async def main():
         # Background tasks
         telemetry_task = asyncio.create_task(telemetry_broadcast_loop())
         directive_task = asyncio.create_task(supabase_directive_worker())
-        print(f"[SERVER] JARVIS WebSocket Server is LIVE and listening on ws://127.0.0.1:{port}")
+        print(f"[SERVER] {BOT_NAME} WebSocket Server is LIVE and listening on ws://127.0.0.1:{port}")
         await asyncio.Future()
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\n[SERVER] Powering down JARVIS Mark VII Core...")
+        print(f"\n[SERVER] Powering down {BOT_NAME} Core...")

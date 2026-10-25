@@ -35,18 +35,22 @@ class VoiceOutput:
             engine.setProperty("rate", VOICE_RATE)
             engine.setProperty("volume", VOICE_VOLUME)
 
-            # Prefer male English voice (e.g. David / Hazel) to match classic JARVIS
+            # Select a friendly, natural English voice (e.g. Zira, Hazel, Eva, or David)
             voices = engine.getProperty("voices")
-            jarvis_voice = None
-            for v in voices:
-                vname = v.name.lower()
-                if "david" in vname or "george" in vname or "mark" in vname:
-                    jarvis_voice = v.id
+            friendly_voice = None
+            preferred_voice_keys = ["zira", "hazel", "eva", "jenny", "david"]
+            for pref in preferred_voice_keys:
+                for v in voices:
+                    if pref in v.name.lower():
+                        friendly_voice = v.id
+                        break
+                if friendly_voice:
                     break
-            if not jarvis_voice and voices:
-                jarvis_voice = voices[0].id
-            if jarvis_voice:
-                engine.setProperty("voice", jarvis_voice)
+
+            if not friendly_voice and voices:
+                friendly_voice = voices[0].id
+            if friendly_voice:
+                engine.setProperty("voice", friendly_voice)
         except Exception as e:
             print(f"[VOICE_OUTPUT] Engine initialization warning: {e}")
             engine = None

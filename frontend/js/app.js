@@ -15,6 +15,8 @@ class JarvisHUDApp {
     this.cachedVoices = [];
     this._lastSpokenText = "";
     this._lastSpokenTime = 0;
+    this.botName = "NOVA";
+    this.userName = "Rohit";
 
     this._bindElements();
     this._initEvents();
@@ -259,7 +261,9 @@ class JarvisHUDApp {
   _handleServerMessage(msg) {
     switch (msg.type) {
       case "handshake":
-        this._log("SYS", `Handshake acknowledged. ${msg.system} online.`, "SUCCESS");
+        if (msg.botName) this.botName = msg.botName;
+        if (msg.userName) this.userName = msg.userName;
+        this._log("SYS", `Connected to ${msg.system || this.botName}. Ready to assist!`, "SUCCESS");
         if (msg.telemetry) this._updateTelemetry(msg.telemetry);
         break;
 
@@ -275,8 +279,8 @@ class JarvisHUDApp {
 
       case "log":
         this._log(msg.tag, msg.message, msg.level, msg.timestamp);
-        // Automatically read aloud any voice response from JARVIS
-        if ((msg.tag === "JARVIS" || msg.level === "VOICE") && this.voiceEnabled) {
+        // Automatically read aloud voice response from assistant
+        if ((msg.tag === this.botName || msg.tag === "NOVA" || msg.tag === "JARVIS" || msg.level === "VOICE") && this.voiceEnabled) {
           this._speakInBrowser(msg.message);
         }
         break;
@@ -360,7 +364,7 @@ class JarvisHUDApp {
     let levelClass = "log-sys";
     const lowerTag = (tag || "").toLowerCase();
     if (lowerTag.includes("user")) levelClass = "log-user";
-    else if (lowerTag.includes("jarvis")) levelClass = "log-jarvis";
+    else if (lowerTag.includes("jarvis") || lowerTag.includes("nova") || lowerTag.includes("assistant")) levelClass = "log-jarvis";
     else if (lowerTag.includes("gemini")) levelClass = "log-gemini";
     else if (lowerTag.includes("automation") || lowerTag.includes("comms")) levelClass = "log-action";
     else if (lowerTag.includes("error") || level === "ERROR") levelClass = "log-error";
@@ -437,7 +441,7 @@ class JarvisHUDApp {
       utterance.rate = 1.05;
       utterance.pitch = 0.95;
 
-      // 5. Select best English voice (UK / US / David / George)
+      // 5. Select friendly English voice
       const voices = (this.cachedVoices && this.cachedVoices.length > 0)
         ? this.cachedVoices
         : window.speechSynthesis.getVoices();
@@ -446,11 +450,12 @@ class JarvisHUDApp {
         const preferred = voices.find(v => {
           const name = (v.name || "").toLowerCase();
           const lang = (v.lang || "").toLowerCase();
-          return name.includes("david") ||
-                 name.includes("george") ||
+          return name.includes("zira") ||
+                 name.includes("hazel") ||
+                 name.includes("eva") ||
+                 name.includes("jenny") ||
+                 name.includes("david") ||
                  name.includes("natural") ||
-                 name.includes("uk") ||
-                 lang.startsWith("en-gb") ||
                  lang.startsWith("en-us") ||
                  lang.startsWith("en");
         });
@@ -512,24 +517,24 @@ class JarvisHUDApp {
       if (lower.startsWith("open ") || lower.startsWith("launch ") || lower.startsWith("start ")) {
         const app = lower.replace(/^(open|launch|start)\s+/, "").trim();
         if (app.includes("discord")) {
-          answer = "Executing launch protocol for Discord, Sir.";
+          answer = `Opening Discord for you right now, ${this.userName}!`;
           window.open("https://discord.com/app", "_blank");
         } else if (app.includes("chrome") || app.includes("browser")) {
-          answer = "Accessing Google Chrome web portal, Sir.";
+          answer = `Launching Google Chrome, ${this.userName}!`;
           window.open("https://www.google.com", "_blank");
         } else if (app.includes("steam")) {
-          answer = "Initiating Steam gaming client protocol, Sir.";
+          answer = `Launching Steam for you, ${this.userName}!`;
           window.open("steam://open/main", "_self");
         } else if (app.includes("spotify")) {
-          answer = "Deploying Spotify media stream, Sir.";
+          answer = `Opening Spotify for you, ${this.userName}!`;
           window.open("https://open.spotify.com", "_blank");
         } else if (app.includes("youtube")) {
-          answer = "Opening YouTube interface, Sir.";
+          answer = `Opening YouTube for you, ${this.userName}!`;
           window.open("https://www.youtube.com", "_blank");
-        } else if (app.includes("calculator") || app.includes("calc")) {
-          answer = "Calculator directive relayed to local execution grid, Sir.";
+        } else if (app.includes("vscode") || app.includes("code")) {
+          answer = `Opening Visual Studio Code for you, ${this.userName}!`;
         } else {
-          answer = `Executing launch protocol for ${app.toUpperCase()}, Sir. Relaying to local execution grid.`;
+          answer = `Opening ${app} for you right away, ${this.userName}!`;
         }
 
       // 3. Wikipedia Direct Information Search
@@ -539,33 +544,33 @@ class JarvisHUDApp {
           const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`);
           if (wikiRes.ok) {
             const wikiData = await wikiRes.json();
-            answer = wikiData.extract ? `According to public archives: ${wikiData.extract.split(". ").slice(0, 2).join(". ")}.` : `Sir, multiple entries exist for ${topic}.`;
+            answer = wikiData.extract ? `According to Wikipedia: ${wikiData.extract.split(". ").slice(0, 2).join(". ")}.` : `Here are the top Wikipedia entries for ${topic}.`;
           } else {
-            answer = `Sir, I searched public archives but could not locate an immediate record for ${topic}.`;
+            answer = `I searched Wikipedia but couldn't find an entry for ${topic}, ${this.userName}.`;
           }
         } catch (e) {
-          answer = `Sir, public archive telemetry returned an anomaly for ${topic}.`;
+          answer = `I ran into an issue searching Wikipedia for ${topic}.`;
         }
 
       // 4. System Diagnostics & Telemetry
       } else if (lower.includes("status") || lower.includes("diagnostics") || lower.includes("battery") || lower.includes("cpu")) {
-        answer = "Sir, all core telemetry parameters are nominal. Supabase cloud database is connected in region ap-south-1.";
+        answer = `Hey ${this.userName}! All workstation telemetry parameters are nominal and systems are operating smoothly.`;
 
       // 5. General Conversational Intelligence
       } else if (lower.includes("hello") || lower.includes("hi") || lower.includes("hey")) {
-        answer = "Greetings, Sir. J.A.R.V.I.S. Mark VII is fully operational and synchronized with Supabase cloud memory.";
+        answer = `Hey ${this.userName}! Great to see you. How can I help with your coding and work today?`;
       } else if (lower.includes("who are you") || lower.includes("your name")) {
-        answer = "I am J.A.R.V.I.S., Just A Rather Very Intelligent System, engineered by Stark Industries to assist you with system automation and intelligence.";
+        answer = `I am ${this.botName}, your friendly AI assistant and developer copilot! I'm here to help you code, open and control applications, and get work done.`;
       } else if (lower.includes("assist") || lower.includes("help") || lower.includes("what can you do")) {
-        answer = "I can control local PC applications, scrape Wikipedia archives, automate communications, monitor hardware telemetry, and synthesize cognitive responses via Gemini.";
+        answer = `I can open any application on your PC, type text and code, execute shortcuts, search the web, manage windows, and answer programming questions!`;
       } else {
-        answer = `Directive acknowledged, Sir: "${text}". I have logged the sequence and initiated execution pathways.`;
+        answer = `Got it, ${this.userName}: "${text}". Working on that for you right now!`;
       }
 
       // 6. Vocal Synthesis & Response Output
       setTimeout(async () => {
         this.setState("SPEAKING");
-        this._log("JARVIS", answer, "VOICE");
+        this._log(this.botName, answer, "VOICE");
         this._speakInBrowser(answer);
 
         if (window.jarvisSupabase) {
